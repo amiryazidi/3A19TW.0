@@ -1,0 +1,37 @@
+
+
+{#  question 4  #}
+{% if authors is not empty %}
+
+
+<table border="1">
+ <tr>
+   <th>Id</th>
+   <th>username</th>    
+   <th>nb_books</th> 
+   <th>email</th> 
+   <th>picture</th>
+    <th>Actions</th>
+
+    {% set somme = 0 %}
+    {% for a in authors %}
+    <tr>
+         {# question 7 : calculer la somme des livres de tous les auteurs #}
+        {% set somme = somme + a.nb_books %}
+       <td>{{a.id}}</td>
+       {# Q5 afficher le nom en majuscule #}
+       <td>{{a.username | upper}}</td>
+       <td>{{a.nb_books}}</td>
+       <td>{{a.email}}</td>
+       <td><img src="{{a.picture}}" alt="{{a.username}}" height="50px" width="50px"></td>
+
+       </tr>
+    {% endfor%}
+ </table>
+ {% else %}
+   <p>No authors found.</p>
+ {% endif %}
+
+ {# question 6 : Afficher le nombre des auteurs.  #}
+ <h1>  le nombre d'auteurs est : {{ authors|length }}</h1>
+<h1>  la somme des livres de tous les auteurs est : {{ somme }} </h1>
