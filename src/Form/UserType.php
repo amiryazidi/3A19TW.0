@@ -20,7 +20,7 @@ class UserType extends AbstractType
             ->add('email')
             ->add('classroom', EntityType::class, [
                 'class' => Classroom::class,
-                'choice_label' => 'ref',
+                'choice_label' => 'name',
             ])
             ->add('save' , SubmitType::class)
         ;

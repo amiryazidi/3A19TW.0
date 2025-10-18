@@ -1,0 +1,43 @@
+
+   {# Bouton d'ajout d'utilisateur #}
+    <div class="mb-3 text-end">
+        <a href="" class="btn btn-success">
+            <i class="bi bi-person-plus"></i> Ajouter un classroom
+        </a>
+    </div>
+
+<table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Ref</th>
+            <th>name</th>
+            <th>CreatedAt</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for classroom in result %}
+            <tr>
+                <td>{{ classroom.ref }}</td>
+                <td>{{ classroom.name }}</td>
+                <td>{{ classroom.createdAt|date('Y-m-d H:i') }}</td>
+                <td>
+                         <a href="" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+                        <a href="{{path('rc',{id:classroom.ref})}}" class="btn btn-danger btn-sm" 
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </a>
+                        <a href="{{ path('addStudentToClassroom', {id: classroom.ref}) }}" class="btn btn-primary btn-sm">
+                         addUser </a>   
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" style="text-align:center;">Aucun utilisateur trouvé</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

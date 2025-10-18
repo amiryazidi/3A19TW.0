@@ -6,6 +6,7 @@ use App\Repository\ClassroomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Cascade;
 
 #[ORM\Entity(repositoryClass: ClassroomRepository::class)]
 class Classroom
@@ -24,7 +25,7 @@ class Classroom
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'classroom')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'classroom', cascade:["remove"], orphanRemoval:true)]
     private Collection $users;
 
     public function __construct()
