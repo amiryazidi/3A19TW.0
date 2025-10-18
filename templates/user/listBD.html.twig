@@ -1,7 +1,42 @@
 
+   {# Bouton d'ajout d'utilisateur #}
+    <div class="mb-3 text-end">
+        <a href="{{ path('addUser') }}" class="btn btn-success">
+            <i class="bi bi-person-plus"></i> Ajouter un utilisateur
+        </a>
+    </div>
 
-{% for user in result %}
-
-{{ user.id }} - {{ user.name }} - {{ user.email }}
-
-{% endfor %}
+<table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Classroom</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in result %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.classroom.name }}</td>
+                <td>
+                         <a href="{{path('updateUser',{id:user.id})}}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+                        <a href="{{path('removeUser',{id:user.id})}}" class="btn btn-danger btn-sm" 
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            <i class="bi bi-trash"></i> Supprimer
+                        </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" style="text-align:center;">Aucun utilisateur trouvé</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
