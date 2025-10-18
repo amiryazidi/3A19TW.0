@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\ClassroomRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -61,16 +64,17 @@ final class UserController extends AbstractController
     }
 
       #[Route('/addUser', name: 'addUser')]
-    public function addUser(ManagerRegistry $mr): Response 
+    public function addUser(ManagerRegistry $mr,Request $req): Response 
      //3- l'injection de dépendance managerRegistry
     {
         //1- creation de l'instance de l'entité User
         $user = new User();
-        //2- affectation des valeurs aux attributs de l'entité
-        $user->setName("Alice");
-        $user->setAge(28);
-        $user->setEmail("alice@example.com");
-        //4-recuperation de l'entity manager
+         // creation du formulaire
+         $form= $this->createForm(UserType::class, $user);
+         // analyser la requette et recupere les données
+        $form->handleRequest($req);
+         if($form->isSubmitted()){
+                //4-recuperation de l'entity manager
         $em=$mr->getManager(); 
         //5- persister l'entité
         $em->persist($user);
@@ -78,25 +82,40 @@ final class UserController extends AbstractController
         $em->flush();
         //7- redirection vers la liste des utilisateurs
         return $this->redirectToRoute('list_user');
+         }
+        return $this->render('user/add.html.twig', [
+            'formUser' => $form->createView()
+        ]);
     }
       #[Route('/updateUser/{id}', name: 'updateUser')]
-     public function updateUser(ManagerRegistry $mr,$id, UserRepository $repo): Response 
-     //3- l'injection de dépendance managerRegistry + repository + id
+     public function updateUser(ManagerRegistry $mr,$id, UserRepository $repo,Request $req): Response 
     {
-        //1- recuperation de l'utilisateur à modifier
        $user = $repo->find($id);
-        //2- affectation des nouvelles valeurs aux attributs de l'entité
-        $user->setName("amir");
-        $user->setAge(29);
-        $user->setEmail("amir@yazidi.com");
+        $form= $this->createForm(UserType::class, $user);
+        $form->handleRequest($req);
+         if($form->isSubmitted()){
+        $em=$mr->getManager(); 
+        $em->flush();
+        return $this->redirectToRoute('list_user');
+         }
+           return $this->render('user/add.html.twig', [
+            'formUser' => $form->createView()
+        ]);
+    }
+
+      #[Route('/removeUser/{id}', name: 'removeUser')]
+    public function removeUser(ManagerRegistry $mr, $id, UserRepository $repo): Response 
+     //3- l'injection de dépendance managerRegistry
+    {
+         //1- recuperation de l'utilisateur à supprimer
+       $user = $repo->find($id);
         //4-recuperation de l'entity manager
         $em=$mr->getManager(); 
         //5- persister l'entité
-        $em->persist($user);
+        $em->remove($user);
         //6- flush
         $em->flush();
         //7- redirection vers la liste des utilisateurs
         return $this->redirectToRoute('list_user');
     }
-    
 }
